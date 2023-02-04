@@ -1,0 +1,45 @@
+class Solution {
+public:
+//当到x是确定的，那么引入一个x以下的整数n，到x+n也是确定的
+    int getMaximumConsecutive(vector<int>& coins) {
+        vector<int> t1,t2;
+        int flag1=1;
+        int flag2=0;
+        for(int e:coins){
+            if(e==1){
+                flag1++;
+            }else{
+                t1.push_back(e);
+            }
+        }
+        bool p=false;
+        do{
+            flag2=0;
+            for(int e:t1){
+                if(e<=flag1){
+                    flag2+=e;
+                    p=true;
+                }
+                else
+                    t2.push_back(e);
+            }
+            flag1+=flag2;
+            t1.swap(t2);
+            t2.clear();
+        }while(!t1.empty() && p);
+        
+        return flag1;
+    }
+
+    void sort(vector<int>& coins){
+        for(int i=0;i<coins.size();i++){
+            for(int j=1+i;j<coins.size();j++){
+                if(coins[i]>coins[j]){
+                    int temp=coins[i];
+                    coins[i]=coins[j];
+                    coins[j]=temp;
+                }
+            }
+        }
+    }
+};
