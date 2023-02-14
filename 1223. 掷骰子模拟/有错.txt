@@ -1,0 +1,112 @@
+#include<algorithm>
+#include<math.h>
+#include<vector>
+#include<iostream>
+using namespace std;
+class Solution {
+public:
+    vector<int> visited;
+    vector<int> rollMax;
+    int dieSimulator(int n, vector<int>& rollMax) {
+        for (int i = 0; i < 6; i++) {
+            visited.push_back(0);
+        }
+        this->rollMax = rollMax;
+        int delNum = 0;
+        delNum = count(0, n,visited);
+        cout << delNum << endl;
+        int total=1;
+        for (int i = 0; i < n; i++) {
+            total = total * 6;
+            while (total >= 1000000007) {
+                total -= 1000000007;
+            }
+        }
+        total = total - delNum;
+        if (total < 0) {
+            total += 1000000007;
+        }
+        return total;
+    }
+    int count(int start, int end, vector<int> visited) {
+        {
+            //合规序列
+            if (start == end) {
+                return 1;
+            }
+            long long int c = 0;
+            int sum = 0;
+            for (int i = 0; i < 6; i++) {
+                sum += visited[i];
+            }
+            for (int i = 0; i < 6; i++) {
+                if (visited[i] == 1) {
+                    continue;
+                }
+                for (int j = start; j < end - rollMax[i]; j++) {
+                    for (int k = j + rollMax[i]; k < end; k++) {
+                        int size = k - j - 1;
+                        int p = pow(size, 6);
+                        int Nlast = samecount(k, end, visited, size, i);
+                        if (sum == 5) {
+                            return p;
+                        }
+                        else{
+                            
+                            visited[i] = 1;
+                            int last = 0;
+                            last = last + count(start, j, visited);
+                            last = last + count(k, end, visited);
+                            c = c + p * (last )+ Nlast;
+                        }
+
+                    }
+                }
+            }
+            return c;
+        }
+
+    }
+        
+    int samecount(int start, int end, vector<int> visited, int forsize, int dest = -1) {    
+        if (start == end) {
+            return 0;
+        }
+        long long int c = 0;
+        int sum = 0;
+        for (int i = 0; i < 6; i++) {
+            sum += visited[i];
+        }
+        for (int j = start; j < end - rollMax[dest]; j++) {
+            for (int k = j + rollMax[dest]; k < end; k++) {
+                int size = k - j - 1 + forsize;
+                int volum = pow(size, 6);
+                int Nlast = samecount(k, end, visited, size, dest);
+                if (sum == 5) {
+                    return volum;
+                }
+                else{
+                
+                visited[dest] = 1;
+                int last = 0;
+                last = last + count(start, j, visited);
+                last = last + count(k, end, visited);
+                c = c + volum * last + Nlast;
+                }
+
+            }
+        }
+        return c;
+    }
+};
+int main() {
+    Solution s = Solution();
+    vector<int> v;
+    //int a[] = { 1, 1, 2, 2, 2, 3 };
+    int a[] = { 1, 1, 1, 2, 2, 3 };
+    for (int i : a) {
+        v.push_back(i);
+    }
+    int r = s.dieSimulator(3, v);
+    cout << r;
+}
