@@ -1,2 +1,2 @@
-# leetcode
-my leetcode answers
+
+保存了刷题过程中的一些东西吧，现在已经不咋更新了，有空写个脚本把leetcode同步过来
